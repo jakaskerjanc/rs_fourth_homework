@@ -9,3 +9,4 @@ jacobi.c
 *.out
 backup
 my_program.dSYM/
+*.ptx 

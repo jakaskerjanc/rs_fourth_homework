@@ -33,7 +33,6 @@ __global__ void mm_block_tc(int mat_size, half *A, half *B, float *C) {
     half* A_block;
     half* B_block;
     float* C_block;
-    float* D_block;
 
     // Continue
     
@@ -51,45 +50,37 @@ __global__ void mm_naive(int mat_size,  half *A, half *B, float *C) {
     for (int i = 0; i < mat_size; ++i) {
       tmp += (float)A[x * mat_size + i] * (float)B[i * mat_size + y];
     }
-    // C = α*(A@B)+β*C
+
     C[x * mat_size + y] = tmp ;
   }
 }
 
 
-
-
 int main() {
     half *mat_a, *mat_b;
     float *mat_c;
-    float *mat_d, *mat_d_check;
 
     mat_a = (half*)malloc(N * N * sizeof(half));
     mat_b = (half*)malloc(N * N * sizeof(half));
     mat_c = (float*)malloc(N * N * sizeof(float));
-    mat_d = (float*)malloc(N * N * sizeof(float));
-    mat_d_check = (float*)malloc(N * N * sizeof(float));
 
     // init matrices 
     init_matrices(mat_a, mat_b, mat_c, N);
 
-    
     // instantiate buffers on the device
     half *d_mat_a, *d_mat_b;
-    float *d_mat_c, *d_mat_d;
+    float *d_mat_c;
     cudaMalloc(&d_mat_a, N * N * sizeof(half));
     cudaMalloc(&d_mat_b, N * N * sizeof(half));
     cudaMalloc(&d_mat_c, N * N * sizeof(float));
-    cudaMalloc(&d_mat_d, N * N * sizeof(float));
 
     // copy data from host to device
     cudaMemcpy(d_mat_a, mat_a, N * N * sizeof(half), cudaMemcpyHostToDevice);
     cudaMemcpy(d_mat_b, mat_b, N * N * sizeof(half), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_mat_c, mat_c, N * N * sizeof(float), cudaMemcpyHostToDevice);
    
      // First: using WMM
     dim3 gridDim;
-    dim3 blockDim;
+    dim3 blockDim; 
     // launch kernel
     blockDim.x = 32;
     blockDim.y = 1;
@@ -99,26 +90,23 @@ int main() {
     cudaEvent_t start1, stop1, start2, stop2;
     float milliseconds = 0;
 
-
+    // to avoid CUDA compile overhead
     mm_naive<<<gridDim, blockDim>>>(N, d_mat_a, d_mat_b, d_mat_c);
-
 
     cudaEventCreate(&start1);
     cudaEventCreate(&stop1);
     cudaEventCreate(&start2);
     cudaEventCreate(&stop2);
 
-
-    
     printf("Running gemm with Tensor cores...\n");
     cudaEventRecord(start2);
-    mm_block_tc<<<gridDim, blockDim>>>(N, d_mat_a, d_mat_b, d_mat_c);
+    // Uncommment here to use TC
+    //mm_block_tc<<<gridDim, blockDim>>>(N, d_mat_a, d_mat_b, d_mat_c);
     cudaEventRecord(stop2);
     cudaEventSynchronize(stop2);
     cudaEventElapsedTime(&milliseconds, start2, stop2);
     printf("Time taken with TC: %f ms\n", milliseconds);
 
-    cudaMemcpy(mat_d, d_mat_d, N * N * sizeof(float), cudaMemcpyDeviceToHost);  
 
     printf("Running gemm without Tensor cores...\n");
     cudaEventRecord(start1);
@@ -128,24 +116,15 @@ int main() {
     cudaEventElapsedTime(&milliseconds, start1, stop1);
     printf("Time taken without TC: %f ms\n", milliseconds);
     
-    // copy data from device to host
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            printf("%f ", mat_d[i * N + j]);
-        }
-        printf("\n");
-    }
+    cudaMemcpy(mat_c, d_mat_c, N * N * sizeof(float), cudaMemcpyDeviceToHost);  
 
     // free memory
     free(mat_a);
     free(mat_b);
     free(mat_c);
-    free(mat_d);
-    free(mat_d_check);
     cudaFree(d_mat_a);
     cudaFree(d_mat_b);
     cudaFree(d_mat_c);
-    cudaFree(d_mat_d);
     
     return 0;
 }

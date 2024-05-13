@@ -6,7 +6,7 @@
 #SBATCH --ntasks-per-node=1  
 #SBATCH --cpus-per-task=1 
 #SBATCH --time=00:10:00
-#SBATCH --output=test1_cpu.out
+#SBATCH --output=test_tc.out
 #SBATCH --constraint=amd
 #SBATCH --reservation=fri
 #SBATCH --propagate=STACK
