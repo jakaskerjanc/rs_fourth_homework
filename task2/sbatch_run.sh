@@ -15,7 +15,7 @@
 
 module load CUDA
 
-FILE=mat_mult
+FILE=mat_mult_solution
 SM_ARCH=70
 
 
