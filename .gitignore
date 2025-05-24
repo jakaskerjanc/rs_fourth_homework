@@ -11,8 +11,6 @@ backup
 my_program.dSYM/
 *.ptx 
 bin/
-*.txt
-*_stats/
 *.log
 show_all.sh
 show_stats.sh
