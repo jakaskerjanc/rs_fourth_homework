@@ -108,6 +108,11 @@ int main() {
     printf("Time taken with TC: %f ms\n", milliseconds);
 
 
+    blockDim.x = 32;
+    blockDim.y = 1;
+    gridDim.x = CEIL_DIV(N,  blockDim.x / 32); 
+    gridDim.y = CEIL_DIV(N,  blockDim.y);
+
     printf("Running gemm without Tensor cores...\n");
     cudaEventRecord(start1);
     mm_naive<<<gridDim, blockDim>>>(N, d_mat_a, d_mat_b, d_mat_c);
