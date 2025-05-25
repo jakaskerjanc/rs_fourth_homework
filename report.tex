@@ -1,0 +1,170 @@
+\documentclass[9pt]{IEEEtran}
+
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{adjustbox}
+\usepackage{multirow}
+\usepackage[compact]{titlesec}
+
+\titlespacing{\section}{0pt}{*1.4}{*1.2}
+\titlespacing{\subsection}{0pt}{*1.1}{*0.9}
+\titlespacing{\subsubsection}{0pt}{*1.0}{*0.8}
+
+
+\title{\vspace{0ex}Performance Analysis of GPU Optimization Strategies for Histogram Computation and Matrix Multiplication}
+\author{Jaka Škerjanc\vspace{-4.0ex}, Erik Pahor}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+This report presents an analysis of two GPU performance optimization tasks: histogram computation and matrix multiplication using TensorCores. The homework focuses on understanding the impact of different implementation strategies on GPU performance metrics and execution efficiency. The histogram computation task compares naive and privatized implementations, while the matrix multiplication task evaluates the benefits of TensorCore acceleration against traditional GPU computation methods.
+
+\section{Implementation Approach}
+
+\subsection*{Task 1: Histogram Computation}
+The implementation approach for the histogram computation involved two distinct strategies:
+
+\subsubsection*{Naive Implementation}
+The naive implementation features:
+\begin{itemize}
+    \item Direct updates to global memory
+    \item Single histogram shared across all threads
+    \item No privatization strategy
+\end{itemize}
+
+\subsubsection*{Optimized Implementation}
+The optimized version implements:
+\begin{itemize}
+    \item Thread group privatization
+    \item Local histogram copies per thread group
+    \item Final merge step to combine private histograms
+\end{itemize}
+
+\subsection*{Task 2: Matrix Multiplication}
+The matrix multiplication implementation utilized two approaches:
+
+\subsubsection*{Naive Implementation (mm\_naive)}
+\begin{itemize}
+    \item Traditional GPU matrix multiplication
+    \item Basic block-based approach
+    \item Standard CUDA kernel implementation
+\end{itemize}
+
+\subsubsection*{TensorCore Implementation (mm\_block\_tc)}
+\begin{itemize}
+    \item WMMA PTX API utilization
+    \item Block-based matrix multiplication
+    \item TensorCore acceleration
+    \item Configurable block sizes matching warp dimensions
+\end{itemize}
+
+\section{Performance Results}
+
+\subsection{Histogram Computation}
+The performance analysis was conducted with varying compute units (2, 4, and 8) and focused on the following metrics:
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{Histogram Performance Metrics}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+\multirow{2}{*}{Metric} & \multicolumn{3}{c}{Naive} & \multicolumn{3}{c}{Optimized} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+ & 8CU & 4CU & 2CU & 8CU & 4CU & 2CU \\
+\midrule
+Load Latency (cycles) & 24.2M & 12.4M & 6.2M & 4.1M & 1.6M & 0.8M \\
+Vector ALU Insts & 5.6K & 11.1K & 22.5K & 7.2K & 14.3K & 28.7K \\
+Shared Mem Reads & 0 & 0 & 0 & 512 & 1.0K & 2.0K \\
+Shared Mem Writes & 0 & 0 & 0 & 512 & 1.0K & 2.0K \\
+Bank Accesses & 0 & 0 & 0 & 98.3K & 196.6K & 393.2K \\
+Total Cycles & 791.8K & 802.9K & 827.2K & 174.5K & 176.2K & 227.6K \\
+VPC & 0.993 & 1.928 & 3.803 & 7.136 & 14.131 & 21.887 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Matrix Multiplication}
+Performance comparison was conducted across different matrix sizes:
+
+\begin{table}[htbp]
+\centering
+\caption{Matrix Multiplication Performance Comparison}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Matrix Size & TensorCore (ms) & Without TensorCore (ms) & Speedup \\
+\midrule
+256×256 & 0.016 & 0.224 & 14.38× \\
+512×512 & 0.040 & 1.543 & 38.38× \\
+1024×1024 & 0.327 & 11.724 & 35.88× \\
+2048×2048 & 1.884 & 80.922 & 42.96× \\
+4096×4096 & 15.329 & 881.823 & 57.53× \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Analysis}
+
+\subsection*{Task 1: Histogram Computation}
+The analysis reveals several key findings:
+
+\begin{itemize}
+    \item Memory Contention
+    \begin{itemize}
+        \item Higher memory contention in naive implementation
+        \item Reduced contention through privatization
+    \end{itemize}
+    \item Performance Metrics
+    \begin{itemize}
+        \item Improved load latency in optimized version
+        \item Better shared memory utilization
+        \item Reduced bank conflicts
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Task 2: Matrix Multiplication}
+Key observations from the matrix multiplication analysis:
+
+\begin{itemize}
+    \item Performance Scaling
+    \begin{itemize}
+        \item Better scaling with larger matrices
+        \item Significant improvements for larger sizes
+    \end{itemize}
+    \item Block Size Impact
+    \begin{itemize}
+        \item Optimal block sizes matching warp dimensions
+        \item Trade-off between memory access and computation
+    \end{itemize}
+\end{itemize}
+
+\section{Conclusion}
+The study demonstrates several key findings:
+
+\begin{itemize}
+    \item Memory Access Optimization
+    \begin{itemize}
+        \item Significant impact of proper memory access patterns
+        \item Effective reduction of contention through privatization
+    \end{itemize}
+    \item Hardware Utilization
+    \begin{itemize}
+        \item Substantial benefits from TensorCores
+        \item Importance of proper block sizing
+    \end{itemize}
+\end{itemize}
+
+These results demonstrate that GPU optimization strategies can significantly impact performance, with the choice of implementation approach depending on the specific workload characteristics and hardware capabilities.
+
+\end{document} 
