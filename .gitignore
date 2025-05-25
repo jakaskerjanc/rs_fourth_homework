@@ -6,7 +6,6 @@ hpc_gemm_v2
 hpc_gemm_sol.c
 hpc_gemm_sol
 jacobi.c
-*.out
 backup
 my_program.dSYM/
 *.ptx 
@@ -14,5 +13,4 @@ bin/
 *.log
 show_all.sh
 show_stats.sh
-mat_mult_solution.cu
 helper_cuda.h

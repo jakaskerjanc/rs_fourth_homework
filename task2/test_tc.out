@@ -1,0 +1,101 @@
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+
+Running matrix multiplication for size 256 x 256
+Time taken with TensorCore: 0.029088 ms
+Time taken without TensorCore: 0.225088 ms
+
+Running matrix multiplication for size 256 x 256
+Time taken with TensorCore: 0.012384 ms
+Time taken without TensorCore: 0.219040 ms
+
+Running matrix multiplication for size 256 x 256
+Time taken with TensorCore: 0.012480 ms
+Time taken without TensorCore: 0.224832 ms
+
+Running matrix multiplication for size 256 x 256
+Time taken with TensorCore: 0.011936 ms
+Time taken without TensorCore: 0.228032 ms
+
+Running matrix multiplication for size 256 x 256
+Time taken with TensorCore: 0.011808 ms
+Time taken without TensorCore: 0.220608 ms
+
+Running matrix multiplication for size 512 x 512
+Time taken with TensorCore: 0.040384 ms
+Time taken without TensorCore: 1.534016 ms
+
+Running matrix multiplication for size 512 x 512
+Time taken with TensorCore: 0.040128 ms
+Time taken without TensorCore: 1.559072 ms
+
+Running matrix multiplication for size 512 x 512
+Time taken with TensorCore: 0.040544 ms
+Time taken without TensorCore: 1.543488 ms
+
+Running matrix multiplication for size 512 x 512
+Time taken with TensorCore: 0.040192 ms
+Time taken without TensorCore: 1.536736 ms
+
+Running matrix multiplication for size 512 x 512
+Time taken with TensorCore: 0.039808 ms
+Time taken without TensorCore: 1.542880 ms
+
+Running matrix multiplication for size 1024 x 1024
+Time taken with TensorCore: 0.325856 ms
+Time taken without TensorCore: 11.709728 ms
+
+Running matrix multiplication for size 1024 x 1024
+Time taken with TensorCore: 0.327008 ms
+Time taken without TensorCore: 11.698432 ms
+
+Running matrix multiplication for size 1024 x 1024
+Time taken with TensorCore: 0.326912 ms
+Time taken without TensorCore: 11.780512 ms
+
+Running matrix multiplication for size 1024 x 1024
+Time taken with TensorCore: 0.326976 ms
+Time taken without TensorCore: 11.730528 ms
+
+Running matrix multiplication for size 1024 x 1024
+Time taken with TensorCore: 0.327040 ms
+Time taken without TensorCore: 11.702208 ms
+
+Running matrix multiplication for size 2048 x 2048
+Time taken with TensorCore: 2.139616 ms
+Time taken without TensorCore: 92.908035 ms
+
+Running matrix multiplication for size 2048 x 2048
+Time taken with TensorCore: 2.119616 ms
+Time taken without TensorCore: 87.104546 ms
+
+Running matrix multiplication for size 2048 x 2048
+Time taken with TensorCore: 1.817024 ms
+Time taken without TensorCore: 78.837891 ms
+
+Running matrix multiplication for size 2048 x 2048
+Time taken with TensorCore: 1.678784 ms
+Time taken without TensorCore: 72.896927 ms
+
+Running matrix multiplication for size 2048 x 2048
+Time taken with TensorCore: 1.664352 ms
+Time taken without TensorCore: 72.864510 ms
+
+Running matrix multiplication for size 4096 x 4096
+Time taken with TensorCore: 15.742912 ms
+Time taken without TensorCore: 881.998169 ms
+
+Running matrix multiplication for size 4096 x 4096
+Time taken with TensorCore: 14.044000 ms
+Time taken without TensorCore: 881.720581 ms
+
+Running matrix multiplication for size 4096 x 4096
+Time taken with TensorCore: 15.247424 ms
+Time taken without TensorCore: 882.510315 ms
+
+Running matrix multiplication for size 4096 x 4096
+Time taken with TensorCore: 16.436928 ms
+Time taken without TensorCore: 881.341187 ms
+
+Running matrix multiplication for size 4096 x 4096
+Time taken with TensorCore: 15.174688 ms
+Time taken without TensorCore: 881.546326 ms
